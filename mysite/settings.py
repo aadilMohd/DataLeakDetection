@@ -6,6 +6,7 @@ SECRET_KEY = '7df--nqa%b+sa+4t3oz%4)e0fq(m*dk!96s0@j%lyj!v1&wg8y'
 DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', '.pythonanywhere.com']
 INSTALLED_APPS = [
+    'app1',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -13,7 +14,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'login',
-    'app1',
+    
+    
 ]
 
 MIDDLEWARE = [

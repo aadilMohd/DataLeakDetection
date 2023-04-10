@@ -97,6 +97,7 @@ def modelformupload(request):
 		clientid = request.session['clientid']
 	except:
 		return HttpResponseRedirect('/')
+	
 	if request.method == 'POST':
 		form = DocumentForm(request.POST, request.FILES)
 		if form.is_valid():
@@ -131,6 +132,7 @@ def displayfiles(request):
 		designation = request.session['access']
 	except:
 		return HttpResponseRedirect('/')
+	
 	q = doc.objects.filter(accesslevel__lte=designation)
 	levels = ['public', 'private', 'confidential', 'topsecret']
 	context = {
@@ -162,7 +164,7 @@ def modify_file(filename, clientid):
     #cipher embedding
     pixel_array = [ord(c) for c in cipher]
     del pixel_array[-1]
-    img = cv2.imread('/home/t3/projtest/actual/new/mysite/media/documents/image_small.png')
+    img = cv2.imread('D:/VIT/6th-SEM/ISS/project1/DataLeakageDjango/media/documents/image_small.png')
     for i in range(0, len(pixel_array), 1):
         img.itemset((55, i + 10, 0), pixel_array[i])
 
@@ -177,18 +179,18 @@ def modify_file(filename, clientid):
 
         img.itemset((x, y, 0), pixel_array1[i])
         y = y + 1
-    cv2.imwrite('/home/t3/projtest/actual/new/mysite/media/documents/image_small_hash.png', img)
+    cv2.imwrite('D:/VIT/6th-SEM/ISS/project1/DataLeakageDjango/media/documents/image_small_hash.png', img)
 
     #embedding process
-    c = canvas.Canvas("/home/t3/projtest/actual/new/mysite/media/documents/watermark.pdf")
-    c.drawImage("/home/t3/projtest/actual/new/mysite/media/documents/image_small_hash.png", 0, 0, preserveAspectRatio=True)
+    c = canvas.Canvas("D:/VIT/6th-SEM/ISS/project1/DataLeakageDjango/media/documents/watermark.pdf")
+    c.drawImage("D:/VIT/6th-SEM/ISS/project1/DataLeakageDjango/media/documents/image_small_hash.png", 0, 0, preserveAspectRatio=True)
     c.save()
 
     output = PdfFileWriter()
-    newurl = "/home/t3/projtest/actual/new/mysite/media/" + filename
+    newurl = "D:/VIT/6th-SEM/ISS/project1/DataLeakageDjango/media/" + filename
     input1 = PdfFileReader(open(newurl, "r+b"))
     num_pages = input1.getNumPages()
-    watermark = PdfFileReader(open("/home/t3/projtest/actual/new/mysite/media/documents/watermark.pdf", "r+b"))
+    watermark = PdfFileReader(open("D:/VIT/6th-SEM/ISS/project1/DataLeakageDjango/media/documents/watermark.pdf", "r+b"))
 
     for pg in range(0, num_pages):
         page = input1.getPage(pg)
@@ -196,13 +198,14 @@ def modify_file(filename, clientid):
         output.addPage(page)
 
     # finally, write "output" to document-output.pdf
-    outputStream = open("/home/t3/projtest/actual/new/mysite/media/documents/document-output.pdf", "w+b")
+    outputStream = open("D:/VIT/6th-SEM/ISS/project1/DataLeakageDjango/media/documents/document-output.pdf", "w+b")
     output.write(outputStream)
     outputStream.close()
     return ("success")
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def checkdocument(request):
+	# return render(request, "app1/detector_checkDocument.html")
     if(k):
         messages.error(request, "Error: "+ k.pop()+ " is culprit")
     try:
@@ -233,15 +236,15 @@ def checkdocument(request):
 def extraction():
 	q = DetectorUpload.objects.last()
 	name = str(q.document)
-	document_location = "/home/t3/projtest/actual/new/mysite/media/"
+	document_location = "D:/VIT/6th-SEM/ISS/project1/DataLeakageDjango/media/"
 	file_loc = document_location + name
-	logo_loc = document_location + "detector/./z"
+	logo_loc = document_location + "detector/./"
 
 	#logo extraction from document
 	subprocess.call(["pdfimages", "-png", "-p", "-l", "1", file_loc, logo_loc])
 
 	#cipher extraction from logo
-	im = cv2.imread(document_location + 'detector/z-001-000.png')
+	im = cv2.imread(document_location + 'detector/image_small.png')
 	cipher = []
 	for i in range(0,24,1):
 		cipher.append(im[55,i+10,0])
